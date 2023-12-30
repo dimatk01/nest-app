@@ -1,5 +1,5 @@
-import { ConfigModule, ConfigService } from '@nestjs/config'
-import * as Entity from '../../../db/entities/index'
+import * as Entity from '../../../db/entities/index';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 export default {
   import: [ConfigModule],
@@ -12,7 +12,7 @@ export default {
     password: configService.get('db.password'),
     port: configService.get('db.port'),
     entities: Object.values(Entity),
-    synchronize: false,
+    synchronize: true,
     logging: ['error'],
   }),
-}
+};

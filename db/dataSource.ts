@@ -1,7 +1,9 @@
-import { DataSource } from 'typeorm'
-import * as Entities from './entities/index'
-import process from 'process'
-require('dotenv').config()
+import { DataSource } from 'typeorm';
+import * as Entities from './entities/index';
+import process from 'process';
+import { config } from 'dotenv';
+
+config();
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -13,12 +15,12 @@ export const AppDataSource = new DataSource({
   entities: Object.values(Entities),
   migrations: ['./db/migrations/*.ts'],
   synchronize: false,
-})
+});
 
 AppDataSource.initialize()
   .then(() => {
-    console.log('Data Source has been initialized!')
+    console.log('Data Source has been initialized!');
   })
   .catch((err) => {
-    console.error('Error during Data Source initialization', err)
-  })
+    console.error('Error during Data Source initialization', err);
+  });

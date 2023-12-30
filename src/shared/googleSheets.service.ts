@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { google } from 'googleapis';
+import { Injectable } from "@nestjs/common";
+import { google } from "googleapis";
 
 @Injectable()
 export class GoogleSheetsService {
@@ -11,7 +11,6 @@ export class GoogleSheetsService {
       range: sheetName,
     });
 
-    const values = response.data.values;
-    return values;
+    return response.data.values;
   }
 }

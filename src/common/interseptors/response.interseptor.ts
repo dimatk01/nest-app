@@ -3,14 +3,14 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
-} from '@nestjs/common'
-import { Observable } from 'rxjs'
-import { map } from 'rxjs/operators'
+} from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 interface BaseResponse<T> {
-  data: T
-  statusCode: number
-  success: boolean
+  data: T;
+  statusCode: number;
+  success: boolean;
 }
 
 @Injectable()
@@ -23,6 +23,6 @@ export class ResponseInterseptor<T>
   ): Observable<BaseResponse<T>> {
     return next
       .handle()
-      .pipe(map((data) => ({ data, statusCode: 1, success: true })))
+      .pipe(map((data) => ({ data, statusCode: 1, success: true })));
   }
 }
