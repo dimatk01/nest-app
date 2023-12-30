@@ -10,7 +10,8 @@ export class TasksService {
   private readonly logger = new Logger(TasksService.name);
 
   @Cron(CronExpression.EVERY_30_SECONDS)
-  handleCron() {
+  async handleCron() {
+   const data = await this.googleSheetsService.getSheetData('1bjqDqLZgjZSZ_fOBolseUDg7L0ktG50BlD9tAYm4rwg')
     this.logger.debug("Called every 30 seconds");
   }
 }
