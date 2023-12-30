@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductQueryDto } from './dto/product.query.dto';
@@ -71,16 +71,21 @@ export class ProductService {
   }
 
   async findOne(id: number) {
-    return await this.productRepository.findOne({
-      where: { id },
-      relations: {
-        subcategory: true,
-        category: true,
-        brand: true,
-        sizes: true,
-        model: true,
-      },
-    });
+    try {
+      return await this.productRepository.findOne({
+        where: { id },
+        relations: {
+          subcategory: true,
+          category: true,
+          brand: true,
+          sizes: true,
+          model: true,
+        },
+      });
+    } catch (e) {
+      console.log({ findOneProduct: e?.message });
+      throw new BadRequestException('Error find product');
+    }
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {
