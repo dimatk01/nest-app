@@ -13,6 +13,7 @@ export default {
     port: configService.get('db.port'),
     entities: Object.values(Entity),
     synchronize: true,
+    ssl: true,
     logging: ['error'],
   }),
 };
