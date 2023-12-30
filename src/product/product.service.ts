@@ -70,8 +70,17 @@ export class ProductService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: number) {
+    return await this.productRepository.findOne({
+      where: { id },
+      relations: {
+        subcategory: true,
+        category: true,
+        brand: true,
+        sizes: true,
+        model: true,
+      },
+    });
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {
