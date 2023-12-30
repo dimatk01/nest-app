@@ -11,7 +11,7 @@ import {
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { ProductQueryDto } from './dto/product.query.dto';
 
 @ApiTags('Products CRUD')
@@ -20,7 +20,6 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  @ApiQuery({ name: 'data' })
   create(@Body() createProductDto: CreateProductDto) {
     return this.productService.create(createProductDto);
   }
