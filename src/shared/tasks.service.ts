@@ -3,17 +3,18 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { GoogleSheetsService } from './google-sheets.service';
 import { mapProductData } from '../common/helpers/mapProductData';
 import { ConfigService } from '@nestjs/config';
-import { ProductRepository } from '../common/repositories/product.repository';
 import { MappedProducts } from '../common/types/mappedProduct';
 import { GoogleSheetData } from '../common/types/googleSheetData';
+import { SynchronizeProductsService } from './synchronize-products.service';
 
 @Injectable()
 export class TasksService {
   private readonly googleSheetsId: string;
+
   constructor(
     private readonly googleSheetsService: GoogleSheetsService,
+    private readonly synchronizeProducts: SynchronizeProductsService,
     private readonly configService: ConfigService,
-    private readonly productRepository: ProductRepository,
   ) {
     this.googleSheetsId = configService.get('google.sheet_id');
   }
@@ -23,7 +24,6 @@ export class TasksService {
     const googleSheetData: GoogleSheetData =
       await this.googleSheetsService.getAllSheetData(this.googleSheetsId);
     const mappedProducts: MappedProducts[] = mapProductData(googleSheetData);
-    await this.synhronizeModels(googleSheetData);
-    // await this.productRepository.save(mappedProducts)
+    await this.synchronizeProducts.synchronize(mappedProducts);
   }
 }

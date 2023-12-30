@@ -6,11 +6,8 @@ export class Size {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   size: string;
-
-  @Column()
-  inStock: boolean;
 
   @ManyToMany(() => Product, (product) => product.sizes, {
     onDelete: 'CASCADE',
