@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { GoogleSpreadsheet } from "google-spreadsheet";
 import { JWT } from "google-auth-library";
 import { google } from "googleapis";
 
@@ -20,39 +19,46 @@ export class GoogleSheetsService {
   }
 
 
-  async getSheetData(spreadsheetId: string) {
-    console.log("________________________________________________");
-    try {
-      const sheets = google.sheets('v4');
-      const auth = await this.authorize();
-      //   const response = await sheets.spreadsheets.values.get({
-      //     spreadsheetId,
-      //     range: 'A1:Z',
-      //     auth
-      //   });
-      // console.table(response.data.values);
-      //    return response.data.values;
+  async getAllSheetData(spreadsheetId: string): Promise<any> {
+    const auth = await this.authorize();
+    const sheets = google.sheets({ version: 'v4', auth });
 
+    try {
       const response = await sheets.spreadsheets.get({
         spreadsheetId,
-        auth
       });
 
       const sheetsData = response.data.sheets;
       const allData = [];
-      console.table( sheetsData[1]);
+
       for (const sheet of sheetsData) {
         const range = `${sheet.properties.title}!A1:Z`;
-        console.log({range});
         const sheetData = await this.getSheetData(spreadsheetId, range);
         allData.push({ sheetTitle: sheet.properties.title, data: sheetData });
       }
-console.table(allData)
-      return allData;
 
-      return sheetsData;
-    } catch (e) {
-      console.log({ getSheetData: e?.message });
+      return allData;
+    } catch (err) {
+      console.error('The API returned an error:', err);
+      throw err;
+    }
+  }
+
+  private async getSheetData(spreadsheetId: string, range: string): Promise<any> {
+    const auth = await this.authorize();
+    const sheets = google.sheets({ version: 'v4', auth });
+
+    try {
+      const response = await sheets.spreadsheets.values.get({
+        spreadsheetId,
+        range,
+      });
+
+      const values = response.data.values;
+      return values;
+    } catch (err) {
+      console.error('The API returned an error:', err);
+      throw err;
     }
   }
 
