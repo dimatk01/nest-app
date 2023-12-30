@@ -16,10 +16,10 @@ export function mapProductData(productData) {
       const sizesIndex = getFieldIndex('Розміри');
 
       if (
-        namesIndex === null ||
-        pricesIndex === null ||
-        articleIndex === null ||
-        sizesIndex === null
+        namesIndex === -1 ||
+        pricesIndex === -1 ||
+        articleIndex === -1 ||
+        sizesIndex === -1
       ) {
         console.error(
           `Required fields not found in data for category: ${sheetTitle}`,
@@ -29,7 +29,7 @@ export function mapProductData(productData) {
 
       const namesRow = data[namesIndex].slice(1);
       const pricesRow = data[pricesIndex].slice(1);
-      const codesRow = data[articleIndex].slice(1);
+      const articleRow = data[articleIndex].slice(1);
       const sizesRow = data.slice(sizesIndex + 1);
 
       const items = namesRow.map((name, index) => {
@@ -39,8 +39,8 @@ export function mapProductData(productData) {
         return {
           model: sheetTitle,
           name: name.trim(),
-          price: pricesRow[index].trim(),
-          code: codesRow[index].trim(),
+          price: Number(pricesRow[index].trim()),
+          article: articleRow[index].trim(),
           sizes: modelSizes,
         };
       });

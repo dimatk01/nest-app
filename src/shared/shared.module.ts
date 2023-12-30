@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { GoogleSheetsService } from './googleSheets.service';
+import { GoogleSheetsService } from './google-sheets.service';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ProductRepository } from '../common/repositories/product.repository';
 
 @Module({
   imports: [ScheduleModule.forRoot()],
-  providers: [TasksService, GoogleSheetsService],
+  providers: [TasksService, GoogleSheetsService, ProductRepository],
 })
 export class SharedModule {}
