@@ -19,7 +19,7 @@ export class TasksService {
     this.googleSheetsId = configService.get('google.sheet_id');
   }
 
-  @Cron(CronExpression.EVERY_30_SECONDS)
+  @Cron(CronExpression.EVERY_HOUR)
   async handleCron() {
     const googleSheetData: GoogleSheetData =
       await this.googleSheetsService.getAllSheetData(this.googleSheetsId);

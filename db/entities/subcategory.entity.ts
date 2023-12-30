@@ -8,7 +8,7 @@ import {
 import { Category, Product } from './index';
 
 @Entity()
-export class Subcategory {
+export class SubCategory {
   @PrimaryGeneratedColumn()
   id: number;
 

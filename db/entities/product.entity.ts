@@ -6,7 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Brand, Category, Model, Size, Subcategory } from './index';
+import { Brand, Category, Model, Size, SubCategory } from './index';
 
 @Entity()
 export class Product {
@@ -29,8 +29,8 @@ export class Product {
   @ManyToOne(() => Category, (category) => category.products)
   category: Category;
 
-  @ManyToOne(() => Subcategory, (subcategory) => subcategory.products)
-  subcategory: Subcategory;
+  @ManyToOne(() => SubCategory, (subcategory) => subcategory.products)
+  subcategory: SubCategory;
 
   @ManyToOne(() => Brand, (brand) => brand.products)
   brand: Brand;
