@@ -19,28 +19,33 @@ export class ProductService {
   ) {}
 
   async create(createProductDto: CreateProductDto) {
-    const category = await this.categoryRepository.findOne({
-      where: { id: createProductDto.categoryId },
-    });
-    const subcategory = await this.subCategory.findOne({
-      where: { id: createProductDto.subcategoryId },
-    });
-    const brand = await this.brandRepository.findOne({
-      where: { id: createProductDto.brandId },
-    });
-    const model = await this.modelRepository.findOne({
-      where: { id: createProductDto.modelId },
-    });
-    const product = new Product();
-    product.article = createProductDto.article;
-    product.price = createProductDto.price;
-    product.name = createProductDto.name;
-    product.category = category;
-    product.subcategory = subcategory;
-    product.brand = brand;
-    product.model = model;
+    try {
+      const category = await this.categoryRepository.findOne({
+        where: { id: createProductDto.categoryId },
+      });
+      const subcategory = await this.subCategory.findOne({
+        where: { id: createProductDto.subcategoryId },
+      });
+      const brand = await this.brandRepository.findOne({
+        where: { id: createProductDto.brandId },
+      });
+      const model = await this.modelRepository.findOne({
+        where: { id: createProductDto.modelId },
+      });
+      const product = new Product();
+      product.article = createProductDto.article;
+      product.price = createProductDto.price;
+      product.name = createProductDto.name;
+      product.category = category;
+      product.subcategory = subcategory;
+      product.brand = brand;
+      product.model = model;
 
-    return await this.productRepository.save(product);
+      return await this.productRepository.save(product);
+    } catch (e) {
+      console.log({ errorCreateProduct: e?.message });
+      throw new BadRequestException('Error create product');
+    }
   }
 
   async findAll(query: ProductQueryDto) {
@@ -67,6 +72,7 @@ export class ProductService {
       );
     } catch (e) {
       console.log({ errorFindAll: e?.message });
+      throw new BadRequestException('Error find all products');
     }
   }
 
@@ -88,11 +94,44 @@ export class ProductService {
     }
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: number, updateProductDto: UpdateProductDto) {
+    try {
+      const category = await this.categoryRepository.findOne({
+        where: { id: updateProductDto.categoryId },
+      });
+      const subcategory = await this.subCategory.findOne({
+        where: { id: updateProductDto.subcategoryId },
+      });
+      const brand = await this.brandRepository.findOne({
+        where: { id: updateProductDto.brandId },
+      });
+      const model = await this.modelRepository.findOne({
+        where: { id: updateProductDto.modelId },
+      });
+
+      return await this.productRepository.update(
+        { id },
+        {
+          ...updateProductDto,
+          model,
+          subcategory,
+          brand,
+          category,
+        },
+      );
+    } catch (e) {
+      console.log({ updateProduct: e?.message });
+      throw new BadRequestException('Error update product');
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: number) {
+    try {
+      const product = await this.productRepository.findOneByOrFail({ id });
+      return await this.productRepository.remove(product);
+    } catch (e) {
+      console.log({ removeProduct: e?.message });
+      throw new BadRequestException('Error remove product');
+    }
   }
 }
