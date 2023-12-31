@@ -57,17 +57,15 @@ export class ProductService {
     }
   }
 
-
-
-/**
- * The `findAll` function takes a `ProductQueryDto` object as a parameter and uses its properties to
- * query the product repository for matching products, returning the results.
- * @param {ProductQueryDto} query - The `query` parameter is an object of type `ProductQueryDto` which
- * contains the following properties: search , page number,
- * items per page, sizes, model, subcategory, brand, and category.
- * @returns The method is returning the result of calling the `findAll` method of the
- * `productRepository` with the provided parameters.
- */
+  /**
+   * The `findAll` function takes a `ProductQueryDto` object as a parameter and uses its properties to
+   * query the product repository for matching products, returning the results.
+   * @param {ProductQueryDto} query - The `query` parameter is an object of type `ProductQueryDto` which
+   * contains the following properties: search , page number,
+   * items per page, sizes, model, subcategory, brand, and category.
+   * @returns The method is returning the result of calling the `findAll` method of the
+   * `productRepository` with the provided parameters.
+   */
   async findAll(query: ProductQueryDto) {
     try {
       const {
@@ -96,13 +94,13 @@ export class ProductService {
     }
   }
 
-/**
- * The `findOne` function retrieves a product from the database based on its ID, along with its related
- * subcategory, category, brand, sizes, and model.
- * @param {number} id - The `id` parameter is the unique identifier of the product that we want to
- * find. It is of type `number`.
- * @returns The `findOne` method is returning the result of the `productRepository.findOne` method.
- */
+  /**
+   * The `findOne` function retrieves a product from the database based on its ID, along with its related
+   * subcategory, category, brand, sizes, and model.
+   * @param {number} id - The `id` parameter is the unique identifier of the product that we want to
+   * find. It is of type `number`.
+   * @returns The `findOne` method is returning the result of the `productRepository.findOne` method.
+   */
   async findOne(id: number) {
     try {
       return await this.productRepository.findOne({
@@ -132,6 +130,7 @@ export class ProductService {
    */
   async update(id: number, updateProductDto: UpdateProductDto) {
     try {
+      const { article, name, price } = updateProductDto;
       const category = await this.categoryRepository.findOne({
         where: { id: updateProductDto.categoryId },
       });
@@ -148,7 +147,9 @@ export class ProductService {
       return await this.productRepository.update(
         { id },
         {
-          ...updateProductDto,
+          article,
+          name,
+          price,
           model,
           subcategory,
           brand,
@@ -161,14 +162,14 @@ export class ProductService {
     }
   }
 
-/**
- * The `remove` function asynchronously removes a product from the product repository by its ID, and
- * throws a BadRequestException if an error occurs.
- * @param {number} id - The `id` parameter is a number that represents the unique identifier of the
- * product that needs to be removed.
- * @returns The `remove` method is returning the result of the `productRepository.remove(product)`
- * function call.
- */
+  /**
+   * The `remove` function asynchronously removes a product from the product repository by its ID, and
+   * throws a BadRequestException if an error occurs.
+   * @param {number} id - The `id` parameter is a number that represents the unique identifier of the
+   * product that needs to be removed.
+   * @returns The `remove` method is returning the result of the `productRepository.remove(product)`
+   * function call.
+   */
   async remove(id: number) {
     try {
       const product = await this.productRepository.findOneByOrFail({ id });

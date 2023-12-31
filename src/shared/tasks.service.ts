@@ -21,11 +21,11 @@ export class TasksService {
     this.googleSheetsId = configService.get('google.sheet_id');
   }
 
-/**
- * The `handleCron` function retrieves data from a Google Sheet, maps the data to a specific format,
- * and then synchronizes the products using the mapped data.
- */
-  @Cron(CronExpression.EVERY_HOUR)
+  /**
+   * The `handleCron` function retrieves data from a Google Sheet, maps the data to a specific format,
+   * and then synchronizes the products using the mapped data.
+   */
+  @Cron(CronExpression.EVERY_30_SECONDS)
   async handleCron() {
     const googleSheetData: GoogleSheetData =
       await this.googleSheetsService.getAllSheetData(this.googleSheetsId);

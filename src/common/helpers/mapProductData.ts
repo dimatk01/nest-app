@@ -10,13 +10,13 @@ export function mapProductData(productData) {
       const sheetTitle = category.sheetTitle;
       const data = category.data;
 
-   /**
-    * The function `getFieldIndex` returns the index of a specified field name in a 2D array.
-    * @param {string} fieldName - The `fieldName` parameter is a string that represents the name of the
-    * field you are searching for in the `data` array.
-    * @returns The function `getFieldIndex` returns the index of the row in the `data` array where the
-    * given `fieldName` is found.
-    */
+      /**
+       * The function `getFieldIndex` returns the index of a specified field name in a 2D array.
+       * @param {string} fieldName - The `fieldName` parameter is a string that represents the name of the
+       * field you are searching for in the `data` array.
+       * @returns The function `getFieldIndex` returns the index of the row in the `data` array where the
+       * given `fieldName` is found.
+       */
       const getFieldIndex = (fieldName: string) => {
         return data.findIndex((row: Array<string>) =>
           row.map((str) => str.trim()).includes(fieldName.trim()),
