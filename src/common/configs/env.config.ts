@@ -19,7 +19,7 @@ const google = registerAs('google', () => ({
 export default {
   envFilePath: `.env`,
   validationSchema: Joi.object({
-    API_PORT: Joi.string().required(),
+    PORT: Joi.string().required(),
     G_SHEET_ID: Joi.string().required(),
     CLIENT_EMAIL: Joi.string().required(),
     PRIVATE_KEY: Joi.string().required(),
