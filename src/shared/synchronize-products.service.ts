@@ -18,15 +18,14 @@ export class SynchronizeProductsService {
     private readonly modelRepository: ModelRepository,
   ) {}
 
-
- /**
-  * The `synchronize` function takes in an array of mapped products, sizes, and models, retrieves sizes
-  * and models from the database, and updates or creates products based on the provided data.
-  * @param {MappedProducts[]} mappedProducts - An array of objects representing mapped products. Each
-  * object should have properties such as name, price, article, model, and sizes.
-  * @param {string[]} sizes - An array of strings representing the sizes of the products.
-  * @param {string[]} models - An array of strings representing the models of the products.
-  */
+  /**
+   * The `synchronize` function takes in an array of mapped products, sizes, and models, retrieves sizes
+   * and models from the database, and updates or creates products based on the provided data.
+   * @param {MappedProducts[]} mappedProducts - An array of objects representing mapped products. Each
+   * object should have properties such as name, price, article, model, and sizes.
+   * @param {string[]} sizes - An array of strings representing the sizes of the products.
+   * @param {string[]} models - An array of strings representing the models of the products.
+   */
   async synchronize(
     mappedProducts: MappedProducts[],
     sizes: string[],
@@ -55,14 +54,14 @@ export class SynchronizeProductsService {
     await Promise.all(mappedProducts.map(handler));
   }
 
-/**
- * The function `getProductSizes` takes an array of existing sizes and an array of sizes from a sheet,
- * and returns an array of existing sizes that match the sizes from the sheet.
- * @param {Size[]} existingSizes - An array of objects representing existing sizes. Each object has a
- * "size" property that represents the size value.
- * @param {string[]} sizesFromSheet - An array of strings representing sizes obtained from a sheet.
- * @returns an array of Size objects.
- */
+  /**
+   * The function `getProductSizes` takes an array of existing sizes and an array of sizes from a sheet,
+   * and returns an array of existing sizes that match the sizes from the sheet.
+   * @param {Size[]} existingSizes - An array of objects representing existing sizes. Each object has a
+   * "size" property that represents the size value.
+   * @param {string[]} sizesFromSheet - An array of strings representing sizes obtained from a sheet.
+   * @returns an array of Size objects.
+   */
   getProductSizes(existingSizes: Size[], sizesFromSheet: string[]) {
     try {
       const getOrCreateSize = (size: string) => {
@@ -75,13 +74,13 @@ export class SynchronizeProductsService {
     }
   }
 
- /**
-  * The function `getSizesFromDb` takes an array of sizes as input, checks if each size already exists
-  * in the database, and either returns the existing size or creates a new size and saves it to the
-  * database.
-  * @param {string[]} sizesFromSheet - An array of strings representing sizes obtained from a sheet.
-  * @returns The function `getSizesFromDb` returns a promise that resolves to an array of sizes.
-  */
+  /**
+   * The function `getSizesFromDb` takes an array of sizes as input, checks if each size already exists
+   * in the database, and either returns the existing size or creates a new size and saves it to the
+   * database.
+   * @param {string[]} sizesFromSheet - An array of strings representing sizes obtained from a sheet.
+   * @returns The function `getSizesFromDb` returns a promise that resolves to an array of sizes.
+   */
   async getSizesFromDb(sizesFromSheet: string[]) {
     try {
       const getOrCreateSize = async (size: string) => {
@@ -105,12 +104,12 @@ export class SynchronizeProductsService {
     }
   }
 
-/**
- * The function `getModelFromDb` retrieves or creates models from a database based on an array of model
- * names.
- * @param {string[]} modelFromSheet - An array of strings representing models obtained from a sheet.
- * @returns a Promise that resolves to an array of models.
- */
+  /**
+   * The function `getModelFromDb` retrieves or creates models from a database based on an array of model
+   * names.
+   * @param {string[]} modelFromSheet - An array of strings representing models obtained from a sheet.
+   * @returns a Promise that resolves to an array of models.
+   */
   async getModelFromDb(modelFromSheet: string[]) {
     try {
       const getOrCreateModel = async (model: string) => {
@@ -134,14 +133,14 @@ export class SynchronizeProductsService {
     }
   }
 
-/**
- * The function `getProductModels` takes an array of existing models and a string of models from a
- * sheet, and returns the first existing model that matches the name from the sheet.
- * @param {Model[]} existingModel - An array of existing Model objects.
- * @param {string} modelsFromSheet - The `modelsFromSheet` parameter is a string that represents the
- * name of a model.
- * @returns the existing model object that matches the name specified in the modelsFromSheet parameter.
- */
+  /**
+   * The function `getProductModels` takes an array of existing models and a string of models from a
+   * sheet, and returns the first existing model that matches the name from the sheet.
+   * @param {Model[]} existingModel - An array of existing Model objects.
+   * @param {string} modelsFromSheet - The `modelsFromSheet` parameter is a string that represents the
+   * name of a model.
+   * @returns the existing model object that matches the name specified in the modelsFromSheet parameter.
+   */
   getProductModels(existingModel: Model[], modelsFromSheet: string) {
     try {
       return existingModel.find((em: Model) => em.name === modelsFromSheet);

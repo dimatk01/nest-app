@@ -1,4 +1,4 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { GoogleSheetsService } from './google-sheets.service';
 import { mapProductData } from '../common/helpers/mapProductData';
