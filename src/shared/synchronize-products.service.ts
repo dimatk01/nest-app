@@ -9,8 +9,6 @@ import {
 } from '../common/repositories';
 
 @Injectable()
-/* The `SynchronizeProductsService` class is responsible for synchronizing products by updating
-existing ones or creating new ones based on the provided data. */
 export class SynchronizeProductsService {
   constructor(
     private readonly productRepository: ProductRepository,
@@ -18,50 +16,53 @@ export class SynchronizeProductsService {
     private readonly modelRepository: ModelRepository,
   ) {}
 
-  /**
-   * The `synchronize` function takes an array of `MappedProducts` objects, retrieves existing products
-   * from the database based on their article, updates their sizes if they exist, or creates new products
-   * if they don't, and saves the changes to the database.
-   * @param {MappedProducts[]} mappedProducts - An array of objects representing mapped products.
-   */
-  async synchronize(mappedProducts: MappedProducts[]) {
+
+  async synchronize(
+    mappedProducts: MappedProducts[],
+    sizes: string[],
+    models: string[],
+  ) {
+    const sizesFromDb = await this.getSizesFromDb(sizes);
+    const modelsFromDb = await this.getModelFromDb(models);
     const handler = async (item) => {
+      const sizes = this.getProductSizes(sizesFromDb, item?.sizes);
       let product = await this.productRepository.findOne({
         where: { article: item?.article },
         relations: ['sizes'],
       });
-      console.log(await this.getProductSizes(item?.sizes));
-      //
-      // if (product) {
-      //   product.sizes = await this.getProductSizes(item?.sizes);
-      // } else {
-      //   product = new Product();
-      //   product.name = item?.name;
-      //   product.price = item?.price;
-      //   product.article = item?.article;
-      //   product.model = await this.getProductModel(item?.model);
-      //   product.sizes = await this.getProductSizes(item?.sizes);
-      // }
-      // console.log(product);
-      // await this.productRepository.save(product);
+      if (product) {
+        product.sizes = sizes;
+      } else {
+        product = new Product();
+        product.name = item?.name;
+        product.price = item?.price;
+        product.article = item?.article;
+        product.model = this.getProductModels(modelsFromDb, item?.model);
+        product.sizes = sizes;
+      }
+      await this.productRepository.save(product);
     };
     await Promise.all(mappedProducts.map(handler));
   }
 
-  /**
-   * The function `getProductSizes` takes an array of sizes and checks if each size already exists in the
-   * database, if not, it creates a new size and saves it in the database.
-   * @param {string[]} sizesFromSheet - An array of strings representing sizes obtained from a sheet.
-   * @returns The `getProductSizes` function is returning a promise that resolves to an array of `Size`
-   * objects.
-   */
-  async getProductSizes(sizesFromSheet: string[]) {
+  getProductSizes(existingSizes: Size[], sizesFromSheet: string[]) {
+    try {
+      const getOrCreateSize = (size: string) => {
+        return existingSizes.find((es) => es.size === size);
+      };
+
+      return sizesFromSheet.map(getOrCreateSize);
+    } catch (e) {
+      console.log({ getProductSizes: e?.message });
+    }
+  }
+
+  async getSizesFromDb(sizesFromSheet: string[]) {
     try {
       const getOrCreateSize = async (size: string) => {
         const existingSizes = await this.sizeRepository.find({
           where: { size: In(sizesFromSheet) },
         });
-        console.log({ existingSizes });
 
         const existingSize = existingSizes.find((es) => es.size === size);
         if (existingSize) {
@@ -75,36 +76,38 @@ export class SynchronizeProductsService {
 
       return await Promise.all(sizesFromSheet.map(getOrCreateSize));
     } catch (e) {
-      console.log({ getProductSizes: e?.message });
+      console.log({ getSizesFromDb: e?.message });
     }
   }
 
-  /**
-   * The function `getProductModel` retrieves an existing model from a repository based on a given
-   * name, or creates a new model if it doesn't exist.
-   * @param {string} modelFromSheet - The parameter `modelFromSheet` is a string that represents the
-   * name of a model obtained from a sheet.
-   * @returns The function `getProductModel` returns either an existing model object from the model
-   * repository if it already exists in the database, or a newly created model object if it does not
-   * exist in the database.
-   */
-  async getProductModel(modelFromSheet: string) {
+  async getModelFromDb(modelFromSheet: string[]) {
     try {
-      const existingModels = await this.modelRepository.find({
-        where: { name: modelFromSheet },
-      });
-      const existingModel = existingModels.find(
-        (em) => em.name === modelFromSheet,
-      );
-      if (existingModel) {
-        return existingModel;
-      } else {
-        const newModel = new Model();
-        newModel.name = modelFromSheet;
-        return await this.modelRepository.save(newModel);
-      }
+      const getOrCreateModel = async (model: string) => {
+        const existingModels = await this.modelRepository.find({
+          where: { name: In(modelFromSheet) },
+        });
+
+        const existingModel = existingModels.find((em) => em.name === model);
+        if (existingModel) {
+          return existingModel;
+        } else {
+          const newModel = new Model();
+          newModel.name = model;
+          return await this.modelRepository.save(newModel);
+        }
+      };
+
+      return await Promise.all(modelFromSheet.map(getOrCreateModel));
     } catch (e) {
-      console.log({ getProductModel: e?.message });
+      console.log({ getModelFromDb: e?.message });
+    }
+  }
+
+  getProductModels(existingModel: Model[], modelsFromSheet: string) {
+    try {
+      return existingModel.find((em: Model) => em.name === modelsFromSheet);
+    } catch (e) {
+      console.log({ getProductModels: e?.message });
     }
   }
 }

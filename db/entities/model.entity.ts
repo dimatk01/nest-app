@@ -12,7 +12,7 @@ export class Model {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({unique: true})
   name: string;
 
   @ManyToOne(() => Brand, (brand) => brand.models)

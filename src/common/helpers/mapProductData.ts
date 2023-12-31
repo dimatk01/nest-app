@@ -5,10 +5,13 @@
  * @returns an array of objects representing product items.
  */
 export function mapProductData(productData) {
-  return productData
+  const sizesFromSheet = new Set();
+  const modelsFromSheet = new Set();
+  const mappedProduct = productData
     .map((category) => {
       const sheetTitle = category.sheetTitle;
       const data = category.data;
+      modelsFromSheet.add(sheetTitle);
 
       /**
        * The function `getFieldIndex` returns the index of a specified field name in a 2D array.
@@ -51,6 +54,7 @@ export function mapProductData(productData) {
         const modelSizes = sizesRow
           .map((row) => (row[index + 1] === '+' ? row[0] : ''))
           .filter(Boolean);
+        modelSizes.forEach((size) => sizesFromSheet.add(size));
         return {
           model: sheetTitle,
           name: name.trim(),
@@ -60,7 +64,8 @@ export function mapProductData(productData) {
         };
       });
 
-      return items;
+      return [items];
     })
     .flat();
+  return [mappedProduct.flat(), [...sizesFromSheet], [...modelsFromSheet]];
 }
