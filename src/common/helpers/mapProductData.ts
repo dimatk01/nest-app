@@ -1,9 +1,22 @@
+/**
+ * The `mapProductData` function takes in product data and maps it to a standardized format, extracting
+ * relevant fields such as name, price, article, and sizes.
+ * @param productData - The `productData` parameter is an array of objects.
+ * @returns an array of objects representing product items.
+ */
 export function mapProductData(productData) {
   return productData
     .map((category) => {
       const sheetTitle = category.sheetTitle;
       const data = category.data;
 
+   /**
+    * The function `getFieldIndex` returns the index of a specified field name in a 2D array.
+    * @param {string} fieldName - The `fieldName` parameter is a string that represents the name of the
+    * field you are searching for in the `data` array.
+    * @returns The function `getFieldIndex` returns the index of the row in the `data` array where the
+    * given `fieldName` is found.
+    */
       const getFieldIndex = (fieldName: string) => {
         return data.findIndex((row: Array<string>) =>
           row.map((str) => str.trim()).includes(fieldName.trim()),
@@ -27,6 +40,8 @@ export function mapProductData(productData) {
         return [];
       }
 
+      /* The code block you provided is extracting specific rows from the `data` array and using them
+      to create an array of objects representing product items. */
       const namesRow = data[namesIndex].slice(1);
       const pricesRow = data[pricesIndex].slice(1);
       const articleRow = data[articleIndex].slice(1);

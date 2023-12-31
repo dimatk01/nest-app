@@ -7,6 +7,8 @@ import { MappedProducts } from '../common/types/mappedProduct';
 import { GoogleSheetData } from '../common/types/googleSheetData';
 import { SynchronizeProductsService } from './synchronize-products.service';
 
+/* The TasksService class is responsible for handling a cron job that retrieves data from a Google
+Sheet, maps it to a specific format, and synchronizes it with a product service. */
 @Injectable()
 export class TasksService {
   private readonly googleSheetsId: string;
@@ -19,6 +21,10 @@ export class TasksService {
     this.googleSheetsId = configService.get('google.sheet_id');
   }
 
+/**
+ * The `handleCron` function retrieves data from a Google Sheet, maps the data to a specific format,
+ * and then synchronizes the products using the mapped data.
+ */
   @Cron(CronExpression.EVERY_HOUR)
   async handleCron() {
     const googleSheetData: GoogleSheetData =

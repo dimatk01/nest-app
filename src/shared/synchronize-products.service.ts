@@ -9,6 +9,8 @@ import {
 } from '../common/repositories';
 
 @Injectable()
+/* The `SynchronizeProductsService` class is responsible for synchronizing products by updating
+existing ones or creating new ones based on the provided data. */
 export class SynchronizeProductsService {
   constructor(
     private readonly productRepository: ProductRepository,
@@ -16,15 +18,20 @@ export class SynchronizeProductsService {
     private readonly modelRepository: ModelRepository,
   ) {}
 
+
+/**
+ * The `synchronize` function takes an array of `MappedProducts` objects, retrieves existing products
+ * from the database based on their article, updates their sizes if they exist, or creates new products
+ * if they don't, and saves the changes to the database.
+ * @param {MappedProducts[]} mappedProducts - An array of objects representing mapped products.
+ */
   async synchronize(mappedProducts: MappedProducts[]) {
-    // Для отриманих товарів з гугл таблиць перевіряємо чи є в нашій БД
     const handler = async (item) => {
       let product = await this.productRepository.findOne({
         where: { article: item?.article },
         relations: ['sizes'],
       });
 
-      //Якщо продукт існує перевіряємо його розміри
       if (product) {
         product.sizes = await this.getProductSizes(item?.sizes);
       } else {
@@ -41,6 +48,13 @@ export class SynchronizeProductsService {
     await Promise.all(mappedProducts.map(handler));
   }
 
+/**
+ * The function `getProductSizes` takes an array of sizes and checks if each size already exists in the
+ * database, if not, it creates a new size and saves it in the database.
+ * @param {string[]} sizesFromSheet - An array of strings representing sizes obtained from a sheet.
+ * @returns The `getProductSizes` function is returning a promise that resolves to an array of `Size`
+ * objects.
+ */
   async getProductSizes(sizesFromSheet: string[]) {
     try {
       const getOrCreateSize = async (size: string) => {
@@ -65,6 +79,15 @@ export class SynchronizeProductsService {
     }
   }
 
+  /**
+   * The function `getProductModel` retrieves an existing model from a repository based on a given
+   * name, or creates a new model if it doesn't exist.
+   * @param {string} modelFromSheet - The parameter `modelFromSheet` is a string that represents the
+   * name of a model obtained from a sheet.
+   * @returns The function `getProductModel` returns either an existing model object from the model
+   * repository if it already exists in the database, or a newly created model object if it does not
+   * exist in the database.
+   */
   async getProductModel(modelFromSheet: string) {
     try {
       const existingModels = await this.modelRepository.find({

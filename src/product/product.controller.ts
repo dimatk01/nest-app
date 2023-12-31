@@ -16,6 +16,8 @@ import { ProductQueryDto } from './dto/product.query.dto';
 
 @ApiTags('Products CRUD')
 @Controller('product')
+/* The ProductController class is responsible for handling HTTP requests related to products and
+delegating the processing to the ProductService. */
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
